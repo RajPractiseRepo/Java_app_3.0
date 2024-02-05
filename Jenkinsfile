@@ -75,10 +75,10 @@ pipeline{
         }
         stage('Push artifacts into artifactory'){
          when { expression {  params.action == 'create' } }   
-            steps {
+            steps{
                 script {
                     
-                jfrog()
+                   jfrog()
                     
                 }
             }
