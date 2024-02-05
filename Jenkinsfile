@@ -4,9 +4,6 @@ pipeline{
 
     agent any
     //agent { label 'Demo' }
-    tools {
-        jfrog 'jf-cli'
-    }
 
     parameters{
 
@@ -47,26 +44,26 @@ pipeline{
                }
             }
         }
-        stage('Static code analysis: Sonarqube'){
-         when { expression {  params.action == 'create' } }
-            steps{
-               script{
+        //stage('Static code analysis: Sonarqube'){
+         //when { expression {  params.action == 'create' } }
+            //steps{
+              // script{
                    
-                   def SonarQubecredentialsId = 'sonarqube-api'
-                   statiCodeAnalysis(SonarQubecredentialsId)
-               }
-            }
-       }
-       stage('Quality Gate Status Check : Sonarqube'){
-         when { expression {  params.action == 'create' } }
-            steps{
-               script{
+                   //def SonarQubecredentialsId = 'sonarqube-api'
+                   //statiCodeAnalysis(SonarQubecredentialsId)
+               //}
+            //}
+       //}
+       //stage('Quality Gate Status Check : Sonarqube'){
+         //when { expression {  params.action == 'create' } }
+            //steps{
+               //script{
                    
-                   def SonarQubecredentialsId = 'sonarqube-api'
-                   QualityGateStatus(SonarQubecredentialsId)
-               }
-            }
-       }
+                  // def SonarQubecredentialsId = 'sonarqube-api'
+                   //QualityGateStatus(SonarQubecredentialsId)
+              // }
+            //}
+      // }
         stage('Maven Build : maven'){
          when { expression {  params.action == 'create' } }
             steps{
@@ -76,56 +73,50 @@ pipeline{
                }
             }
         }
-        //stage('Push artifacts into artifactory'){
-         //when { expression {  params.action == 'create' } }   
+         stage('Push artifacts into artifactory'){ 
+             steps{
+                script {    
+                 jfrog()
+                    
+                }
+            }
+        }
+
+        //stage('Docker Image Build'){
+         //when { expression {  params.action == 'create' } }
            // steps{
-                //script {
-                    
-                   //jfrog()
-                    
-                //}
+              // script{
+                   
+                  // dockerBuild("${params.ImageName}","${params.ImageTag}","${params.DockerHubUser}")
+              // }
+            //}
+       // }
+        // stage('Docker Image Scan: trivy '){
+         //when { expression {  params.action == 'create' } }
+           // steps{
+               //script{
+                   
+                   //dockerImageScan("${params.ImageName}","${params.ImageTag}","${params.DockerHubUser}")
+               //}
             //}
         //}
-        stage('Publish to JFROG') {
-            steps {
-                jf 'rt u /var/lib/jenkins/.m2/repository/com/minikube/sample/kubernetes-configmap-reload/0.0.1-SNAPSHOT/kubernetes-configmap-reload-0.0.1-SNAPSHOT.jar example-repo-local/'
-            }
-        }
-        stage('Docker Image Build'){
-         when { expression {  params.action == 'create' } }
-            steps{
-               script{
+        //stage('Docker Image Push : DockerHub '){
+         //when { expression {  params.action == 'create' } }
+            //steps{
+               //script{
                    
-                   dockerBuild("${params.ImageName}","${params.ImageTag}","${params.DockerHubUser}")
-               }
-            }
-        }
-         stage('Docker Image Scan: trivy '){
-         when { expression {  params.action == 'create' } }
-            steps{
-               script{
+                  // dockerImagePush("${params.ImageName}","${params.ImageTag}","${params.DockerHubUser}")
+               //}
+            //}
+       // }   
+       // stage('Docker Image Cleanup : DockerHub '){
+        // when { expression {  params.action == 'create' } }
+            //steps{
+              // script{
                    
-                   dockerImageScan("${params.ImageName}","${params.ImageTag}","${params.DockerHubUser}")
-               }
-            }
-        }
-        stage('Docker Image Push : DockerHub '){
-         when { expression {  params.action == 'create' } }
-            steps{
-               script{
-                   
-                   dockerImagePush("${params.ImageName}","${params.ImageTag}","${params.DockerHubUser}")
-               }
-            }
-        }   
-        stage('Docker Image Cleanup : DockerHub '){
-         when { expression {  params.action == 'create' } }
-            steps{
-               script{
-                   
-                   dockerImageCleanup("${params.ImageName}","${params.ImageTag}","${params.DockerHubUser}")
-               }
-            }
-        }      
+                   //dockerImageCleanup("${params.ImageName}","${params.ImageTag}","${params.DockerHubUser}")
+               //}
+            //}
+        //}      
     }
 }
