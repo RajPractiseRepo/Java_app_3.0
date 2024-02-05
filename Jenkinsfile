@@ -4,6 +4,9 @@ pipeline{
 
     agent any
     //agent { label 'Demo' }
+    tools {
+        jfrog 'jf-cli'
+    }
 
     parameters{
 
@@ -73,14 +76,19 @@ pipeline{
                }
             }
         }
-        stage('Push artifacts into artifactory'){
-         when { expression {  params.action == 'create' } }   
-            steps{
-                script {
+        //stage('Push artifacts into artifactory'){
+         //when { expression {  params.action == 'create' } }   
+           // steps{
+                //script {
                     
-                   jfrog()
+                   //jfrog()
                     
-                }
+                //}
+            //}
+        //}
+        stage('Publish to JFROG') {
+            steps {
+                jf 'rt u /var/lib/jenkins/.m2/repository/com/minikube/sample/kubernetes-configmap-reload/0.0.1-SNAPSHOT/kubernetes-configmap-reload-0.0.1-SNAPSHOT.jar example-repo-local/'
             }
         }
         stage('Docker Image Build'){
