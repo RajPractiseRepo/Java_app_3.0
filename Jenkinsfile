@@ -73,10 +73,12 @@ pipeline{
                }
             }
         }
-        stage('Push artifacts into artifactory') {
+        stage('Push artifacts into artifactory'){
             steps {
                 script {
+                    
                 jfrog()
+                    
                 }
             }
         }
