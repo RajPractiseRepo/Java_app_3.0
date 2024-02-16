@@ -127,6 +127,7 @@ pipeline{
              }
         }
         stage('Docker container '){
+          when { expression {  params.action == 'create' } }
              steps{
                 script{
                    
