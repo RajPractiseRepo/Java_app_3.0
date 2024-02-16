@@ -127,11 +127,10 @@ pipeline{
              }
         }
         stage('Docker container '){
-           when { expression {  params.action == 'create' } }
              steps{
                 script{
                    
-                   docker build -d -p 8083:8080 rajpractise/javapp
+                 sh "docker build -d -p 8083:8080 rajpractise/javapp:v1"
                 }
              }
         }     
