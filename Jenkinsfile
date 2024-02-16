@@ -131,7 +131,7 @@ pipeline{
              steps{
                 script{
                    
-                 sh "docker build -d -p 8083:8080 rajpractise/javapp:v1"
+                 sh "docker run -d -p 8083:8080 rajpractise/javapp:v1"
                 }
              }
         }     
