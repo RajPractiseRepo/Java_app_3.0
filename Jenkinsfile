@@ -11,6 +11,7 @@ pipeline{
         string(name: 'ImageName', description: "name of the docker build", defaultValue: 'javapp')
         string(name: 'ImageTag', description: "tag of the docker build", defaultValue: 'v1')
         string(name: 'DockerHubUser', description: "name of the Application", defaultValue: 'rajpractise')
+        password(name: 'jfrog', description: "password", defaultValue: 'jfrogcrednew')
     }
 
     stages{
@@ -104,7 +105,7 @@ pipeline{
           when { expression {  params.action == 'create' } }
           steps{
             script{
-                 sh 'curl -X PUT -u admin:Admin@1221 -T  /var/lib/jenkins/workspace/jfrog/target/kubernetes-configmap-reload-0.0.1-SNAPSHOT.jar "http://54.211.33.240:8082/artifactory/example-repo-local/kubernetes-configmap-reload-0.0.1-SNAPSHOT.jar"'
+                 sh 'curl -X PUT -u admin:"${params.jfrog}" -T  /var/lib/jenkins/workspace/jfrog/target/kubernetes-configmap-reload-0.0.1-SNAPSHOT.jar "http://54.211.33.240:8082/artifactory/example-repo-local/kubernetes-configmap-reload-0.0.1-SNAPSHOT.jar"'
                 }
             }
         }
